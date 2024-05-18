@@ -22,9 +22,7 @@ class SenderActivity : AppCompatActivity() {
         val buttonEmail = findViewById<Button>(R.id.buttonEmail)
         buttonEmail.setOnClickListener{
             val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
-                data = Uri.parse("mailto:android@otus.ru")
-                putExtra(Intent.EXTRA_SUBJECT, "Тема письма")
-                putExtra(Intent.EXTRA_TEXT, "Привет! Это тестовое письмо.")
+                data = Uri.parse("mailto:android@otus.ru?subject=Тема письма&body=Привет! Это тестовое письмо.")
             }
             startActivity(emailIntent)
 
@@ -32,6 +30,11 @@ class SenderActivity : AppCompatActivity() {
 
         val buttonReceiver = findViewById<Button>(R.id.buttonReceiver)
         buttonReceiver.setOnClickListener{
+            val shareIntent = Intent()
+            shareIntent.action = "com.example.OPEN_RECEIVER"
+            startActivity(shareIntent)
+
+
 
         }
 
