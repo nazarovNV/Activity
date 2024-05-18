@@ -30,9 +30,8 @@ class SenderActivity : AppCompatActivity() {
 
         val buttonReceiver = findViewById<Button>(R.id.buttonReceiver)
         buttonReceiver.setOnClickListener{
-            val shareIntent = Intent()
-            shareIntent.action = "com.example.OPEN_RECEIVER"
-            startActivity(shareIntent)
+            val intent = Intent("testActivity")
+            startActivity(intent)
 
 
 
