@@ -30,11 +30,20 @@ class SenderActivity : AppCompatActivity() {
 
         val buttonReceiver = findViewById<Button>(R.id.buttonReceiver)
         buttonReceiver.setOnClickListener{
-            val intent = Intent("testActivity")
-            startActivity(intent)
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/plain"
+            intent.addCategory(Intent.CATEGORY_DEFAULT)
+            intent.putExtra("title", "Славные парни")
+            intent.putExtra("year", "2016")
+            intent.putExtra("description", "Что бывает, когда напарником брутального " +
+                    "костолома становится субтильный лопух? Наемный охранник Джексон Хили " +
+                    "и частный детектив Холланд Марч вынуждены работать в паре, чтобы распутать " +
+                    "плевое дело о пропавшей девушке, которое оборачивается преступлением века. " +
+                    "Смогут ли парни разгадать сложный ребус, если у каждого из них – свои, " +
+                    "весьма индивидуальные методы.")
 
-
-
+            val chooser = Intent.createChooser(intent, "Receive a movie")
+            startActivity(chooser)
         }
 
     }

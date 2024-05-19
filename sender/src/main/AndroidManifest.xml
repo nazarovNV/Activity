@@ -10,14 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Activities">
         <activity
-            android:name=".TestActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.example.ACTION_OPEN_RECEIVER" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".SenderActivity"
             android:exported="true"
             android:launchMode="standard">
