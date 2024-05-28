@@ -1,6 +1,7 @@
 package otus.gpb.homework.activities
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -13,11 +14,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import android.provider.Settings
 
 class EditProfileActivity : AppCompatActivity() {
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
     private lateinit var imageView: ImageView
+
+    private lateinit var pickImageLauncher: ActivityResultLauncher<String>
 
     private var IS_FIRST_TIME_ALREADY_DENIED : Boolean = false
 
@@ -30,6 +34,12 @@ class EditProfileActivity : AppCompatActivity() {
             showAlertDialog()
         }
 
+        pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            if (uri != null) {
+                populateImage(uri)
+            }
+        }
+
         requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
                 // Разрешение на использование камеры получено
@@ -37,7 +47,11 @@ class EditProfileActivity : AppCompatActivity() {
             }
             else {
                 // Пользователь отказал в доступе к камере
-                showRationaleDialog()
+                if (IS_FIRST_TIME_ALREADY_DENIED) {
+                    showSettingsDialog()
+                } else {
+                    IS_FIRST_TIME_ALREADY_DENIED = true
+                }
             }
         }
 
@@ -74,15 +88,21 @@ class EditProfileActivity : AppCompatActivity() {
             .setMessage("Выберите откуда вы хотите добавить фото")
             .setNeutralButton("Назад") { dialog, which ->
                 dialog.dismiss()
-                // Respond to neutral button press
             }
             .setNegativeButton("Сделать фото") { dialog, which ->
                 checkCameraPermission()
             }
             .setPositiveButton("Выбрать фото") { dialog, which ->
+                choosePhotoFromGallery()
                 // Respond to positive button press
             }.create()
         addPhotoDialog.show()
+    }
+
+
+
+    private fun choosePhotoFromGallery() {
+        pickImageLauncher.launch("image/*")
     }
 
     private fun checkCameraPermission() {
@@ -92,7 +112,10 @@ class EditProfileActivity : AppCompatActivity() {
                 imageView.setImageResource(R.drawable.cat)
             }
             else -> {
-                requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+                if (IS_FIRST_TIME_ALREADY_DENIED)
+                    showRationaleDialog()
+                else
+                    requestPermissionLauncher.launch(Manifest.permission.CAMERA)
             }
         }
     }
@@ -109,6 +132,23 @@ class EditProfileActivity : AppCompatActivity() {
             }.create()
         warningDialog.show()
 
+    }
+
+    private fun showSettingsDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Отказано в доступе")
+            .setMessage("Вы отказали в доступе к камере. Хотите изменить это в настройках?")
+            .setPositiveButton("Да") { dialog, _ ->
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val uri: Uri = Uri.fromParts("package", packageName, null)
+                intent.data = uri
+                startActivity(intent)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Отмена") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
 
