@@ -7,14 +7,20 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+
+val RESULT_NAME = "result_name"
+val RESULT_SECOND_NAME = "result_second_name"
+val RESULT_AGE = "result_age"
 
 class EditProfileActivity : AppCompatActivity() {
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
@@ -26,6 +32,25 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var pickImageLauncher: ActivityResultLauncher<String>
 
     private var isFirstTimeDenied : Boolean = false
+
+    private val launcherFillFormActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+    { result ->
+        val data = result.data
+        val resultCode = result.resultCode
+        if (resultCode == RESULT_OK && data!= null) {
+            val name = data.getStringExtra(RESULT_NAME)
+            val secondName = data.getStringExtra(RESULT_SECOND_NAME)
+            val age = data.getIntExtra(RESULT_AGE, 0)
+
+            Log.i("TAG", name?:"null")
+
+            // val textview_name : TextView =
+            findViewById<TextView>(R.id.textview_name).text = name
+            findViewById<TextView>(R.id.textview_second_name).text = secondName
+            findViewById<TextView>(R.id.textview_age).text = age.toString()
+        }
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,8 +98,10 @@ class EditProfileActivity : AppCompatActivity() {
         buttonEditProfile = findViewById(R.id.buttonEditProfile)
 
         buttonEditProfile.setOnClickListener {
+
             val intent = Intent(this, FillFormActivity::class.java)
-            startActivity(intent)
+            launcherFillFormActivity.launch(intent)
+
         }
 
     }
