@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <EditText
+        android:id="@+id/editTextTextName"
+        android:layout_width="337dp"
+        android:layout_height="wrap_content"
+        android:autofillHints="Имя"
+        android:layout_margin="12dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="" />
+
+    <EditText
+        android:id="@+id/editTextTextSecondName"
+        android:layout_width="344dp"
+        android:layout_height="wrap_content"
+        android:autofillHints="Фамилия"
+        android:layout_margin="12dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="" />
+
+    <EditText
+        android:id="@+id/editTextTextAge"
+        android:layout_width="340dp"
+        android:layout_height="wrap_content"
+        android:autofillHints="Возраст"
+        android:layout_margin="12dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="" />
+
+    <Button
+        android:id="@+id/buttonApply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Применить" />
+</LinearLayout>

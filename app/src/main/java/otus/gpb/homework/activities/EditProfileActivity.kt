@@ -6,7 +6,8 @@ import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
+import android.provider.Settings
+import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -14,16 +15,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import android.provider.Settings
 
 class EditProfileActivity : AppCompatActivity() {
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
     private lateinit var imageView: ImageView
 
+    private lateinit var buttonEditProfile: Button
+
     private lateinit var pickImageLauncher: ActivityResultLauncher<String>
 
-    private var IS_FIRST_TIME_ALREADY_DENIED : Boolean = false
+    private var isFirstTimeDenied : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +49,10 @@ class EditProfileActivity : AppCompatActivity() {
             }
             else {
                 // Пользователь отказал в доступе к камере
-                if (IS_FIRST_TIME_ALREADY_DENIED) {
+                if (isFirstTimeDenied) {
                     showSettingsDialog()
                 } else {
-                    IS_FIRST_TIME_ALREADY_DENIED = true
+                    isFirstTimeDenied = true
                 }
             }
         }
@@ -67,6 +69,14 @@ class EditProfileActivity : AppCompatActivity() {
                 }
             }
         }
+
+        buttonEditProfile = findViewById(R.id.buttonEditProfile)
+
+        buttonEditProfile.setOnClickListener {
+            val intent = Intent(this, FillFormActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     /**
@@ -112,7 +122,7 @@ class EditProfileActivity : AppCompatActivity() {
                 imageView.setImageResource(R.drawable.cat)
             }
             else -> {
-                if (IS_FIRST_TIME_ALREADY_DENIED)
+                if (isFirstTimeDenied)
                     showRationaleDialog()
                 else
                     requestPermissionLauncher.launch(Manifest.permission.CAMERA)
