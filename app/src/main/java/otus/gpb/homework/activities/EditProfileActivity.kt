@@ -40,14 +40,14 @@ class EditProfileActivity : AppCompatActivity() {
         if (resultCode == RESULT_OK && data!= null) {
             val name = data.getStringExtra(RESULT_NAME)
             val secondName = data.getStringExtra(RESULT_SECOND_NAME)
-            val age = data.getIntExtra(RESULT_AGE, 0)
+            val age = data.getStringExtra(RESULT_AGE)
 
             Log.i("TAG", name?:"null")
 
             // val textview_name : TextView =
             findViewById<TextView>(R.id.textview_name).text = name
             findViewById<TextView>(R.id.textview_second_name).text = secondName
-            findViewById<TextView>(R.id.textview_age).text = age.toString()
+            findViewById<TextView>(R.id.textview_age).text = age
         }
 
     }
