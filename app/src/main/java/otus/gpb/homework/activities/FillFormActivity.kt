@@ -3,6 +3,7 @@ package otus.gpb.homework.activities
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +24,8 @@ class FillFormActivity : AppCompatActivity() {
                 .putExtra(RESULT_AGE, age)
 
             setResult(RESULT_OK, intent)
+
+            Log.i("TAG", age)
             finish()
         }
     }
