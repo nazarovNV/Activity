@@ -1,6 +1,7 @@
 package otus.gpb.homework.activities
 
 import android.Manifest
+import android.R.id.message
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
@@ -11,6 +12,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -18,12 +20,17 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
+
 val RESULT_NAME = "result_name"
 val RESULT_SECOND_NAME = "result_second_name"
 val RESULT_AGE = "result_age"
 
+
+
 class EditProfileActivity : AppCompatActivity() {
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
+
+    private lateinit var uri: Uri
 
     private lateinit var imageView: ImageView
 
@@ -42,9 +49,6 @@ class EditProfileActivity : AppCompatActivity() {
             val secondName = data.getStringExtra(RESULT_SECOND_NAME)
             val age = data.getStringExtra(RESULT_AGE)
 
-            Log.i("TAG", name?:"null")
-
-            // val textview_name : TextView =
             findViewById<TextView>(R.id.textview_name).text = name
             findViewById<TextView>(R.id.textview_second_name).text = secondName
             findViewById<TextView>(R.id.textview_age).text = age
@@ -101,7 +105,6 @@ class EditProfileActivity : AppCompatActivity() {
 
             val intent = Intent(this, FillFormActivity::class.java)
             launcherFillFormActivity.launch(intent)
-
         }
 
     }
@@ -115,7 +118,19 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun openSenderApp() {
-        TODO("В качестве реализации метода отправьте неявный Intent чтобы поделиться профилем. В качестве extras передайте заполненные строки и картинку")
+        val nameToSend = findViewById<TextView>(R.id.textview_name).text
+        val secondNameToSend = findViewById<TextView>(R.id.textview_second_name).text
+        val ageToSend = findViewById<TextView>(R.id.textview_age).text
+
+        val photo = findViewById<ImageView>(R.id.imageview_photo)
+
+        val waIntent = Intent(Intent.ACTION_SEND)
+        waIntent.type = "image/*"
+        waIntent.setPackage("org.telegram.messenger")
+
+        waIntent.putExtra(Intent.EXTRA_TEXT, "$nameToSend\n$secondNameToSend\n$ageToSend")
+        startActivity(Intent.createChooser(waIntent, "Share with"))
+
     }
 
 
