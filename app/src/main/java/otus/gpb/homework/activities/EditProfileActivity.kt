@@ -30,7 +30,7 @@ val RESULT_AGE = "result_age"
 class EditProfileActivity : AppCompatActivity() {
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
-    private lateinit var uri: Uri
+    private lateinit var uri1: Uri
 
     private lateinit var imageView: ImageView
 
@@ -67,6 +67,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
+                uri1 = uri
                 populateImage(uri)
             }
         }
@@ -75,6 +76,9 @@ class EditProfileActivity : AppCompatActivity() {
             if (isGranted) {
                 // Разрешение на использование камеры получено
                 imageView.setImageResource(R.drawable.cat)
+                // Не понимаю как получить uri картинки с котом чтобы потом переслать ее в тг
+                uri1 = Uri.parse("android.resource://$packageName/${R.drawable.cat}")
+                Log.i("TAG", uri1.toString())
             }
             else {
                 // Пользователь отказал в доступе к камере
@@ -122,13 +126,13 @@ class EditProfileActivity : AppCompatActivity() {
         val secondNameToSend = findViewById<TextView>(R.id.textview_second_name).text
         val ageToSend = findViewById<TextView>(R.id.textview_age).text
 
-        val photo = findViewById<ImageView>(R.id.imageview_photo)
-
         val waIntent = Intent(Intent.ACTION_SEND)
         waIntent.type = "image/*"
         waIntent.setPackage("org.telegram.messenger")
 
         waIntent.putExtra(Intent.EXTRA_TEXT, "$nameToSend\n$secondNameToSend\n$ageToSend")
+        waIntent.putExtra(Intent.EXTRA_STREAM, uri1) // Добавляем URI изображения
+        Log.i("TAG", uri1.toString())
         startActivity(Intent.createChooser(waIntent, "Share with"))
 
     }
@@ -162,6 +166,10 @@ class EditProfileActivity : AppCompatActivity() {
             ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED -> {
                 // Разрешение на использование камеры уже есть
                 imageView.setImageResource(R.drawable.cat)
+
+                val resID = resources.getIdentifier("cat", "drawable", packageName)
+                Log.i("TAG", resID.toString())
+
             }
             else -> {
                 if (isFirstTimeDenied)
